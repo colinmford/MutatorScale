@@ -17,7 +17,7 @@ from fontTools.pens.boundsPen import BoundsPen
 
 class ScaleFont(object):
     """
-    A ScaleFont takes a font object (Robofab or Defcon) and a scale setting,
+    A ScaleFont takes a font object (FontParts or Defcon) and a scale setting,
     it is then ready to return any number of scaled glyphs.
 
     Usage:
@@ -262,7 +262,7 @@ if __name__ == '__main__':
                     self.assertEqual(scaledGlyph.name, glyphName)
 
         def test_extract_scaled_glyph_as_FontParts_Glyph(self):
-            """Test scaled glyph retrieval as a Robofab Glyph."""
+            """Test scaled glyph retrieval as a FontParts Glyph."""
             from fontParts.fontshell import RGlyph
             for testFont in [self.smallFont, self.stemedSmallFont]:
                 scaledGlyph = RGlyph()
