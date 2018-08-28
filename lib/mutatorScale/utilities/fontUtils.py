@@ -161,7 +161,7 @@ def extractComposites(glyph):
     decomposedComposites = RGlyph()
 
     if len(glyph.components):
-        font = glyph.font
+        font = glyph.layer
 
         for comp in reversed(glyph.components):
 
@@ -187,7 +187,7 @@ def intersect(glyph, where, isHorizontal):
     Intersect a glyph with a horizontal or vertical line.
     Intersect each segment of a glyph using fontTools bezierTools.splitCubic and splitLine methods.
     """
-    pen = CollectSegmentsPen(glyph.font)
+    pen = CollectSegmentsPen(glyph.layer)
     glyph.draw(pen)
     nakedGlyph = pen.getSegments()
     glyphIntersections = []
@@ -248,7 +248,7 @@ def findDuplicatePoints(segments):
 
 
 def getGlyphBox(glyph):
-    pen = BoundsPen(glyph.font)
+    pen = BoundsPen(glyph.layer)
     glyph.draw(pen)
     return pen.bounds
 
