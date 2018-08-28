@@ -9,7 +9,7 @@ scaler.set({
     'scale':(0.85, 0.8)
     })
 
-f = RFont(showUI=False)
+f = RFont(showInterface=False)
 f.info.familyName = 'Output'
 
 for glyphName in ['A','H','I','O']:
@@ -17,4 +17,5 @@ for glyphName in ['A','H','I','O']:
     g = scaler.getScaledGlyph(glyphName, stemValues)
     f.insertGlyph(g, glyphName)
 
-f.showUI()
+f.openInterface()
+

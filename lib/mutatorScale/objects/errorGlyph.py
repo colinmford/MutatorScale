@@ -2,7 +2,8 @@
 from __future__ import division
 
 from math import pi, cos, sin, hypot
-from robofab.world import RGlyph
+
+from fontParts.fontshell import RGlyph
 
 _LETTERFORMS = {
         'interpolation':[
@@ -40,7 +41,7 @@ class ErrorGlyph(RGlyph):
         self.width = 500
         self._drawError(errorName)
         scale = upm / 1000
-        self.scale((scale, scale))
+        self.scaleBy((scale, scale))            
 
     def _setSize(self, size):
         self.si = size

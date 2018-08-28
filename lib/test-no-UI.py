@@ -2,7 +2,8 @@
 
 from mutatorScale.objects.scaler import MutatorScaleEngine
 from mutatorScale.utilities.fontUtils import intersect
-from robofab.world import RFont
+
+from fontParts.fontshell import RFont
 
 paths = [
     'testFonts/two-axes/regular-low-contrast.ufo',

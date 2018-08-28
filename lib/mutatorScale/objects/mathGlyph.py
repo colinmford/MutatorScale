@@ -1,7 +1,8 @@
 import weakref
-from robofab.world import RGlyph
-from robofab.pens.pointPen import BasePointToSegmentPen, AbstractPointPen
-from robofab.objects.objectsBase import addPt, subPt, mulPt, BaseGlyph
+
+from fontParts.world import RGlyph
+from ufoLib.pointPen import BasePointToSegmentPen, AbstractPointPen, PointToSegmentPen
+from fontParts.base import BaseGlyph
 from math import radians, tan, cos, sin, pi
 
 '''
@@ -9,6 +10,23 @@ Custom implementation of a MathGlyph with skewing.
 Original MathGlyph in FontMath, by Tal Leming: https://github.com/typesupply/fontMath
 See license (MIT), here: https://github.com/typesupply/fontMath/blob/master/License.txt
 '''
+
+def addPt(ptA, ptB):
+    """Add two vectors"""
+    return ptA[0] + ptB[0], ptA[1] + ptB[1]
+
+def subPt(ptA, ptB):
+    """Substract two vectors"""
+    return ptA[0] - ptB[0], ptA[1] - ptB[1]
+
+def mulPt(pt, scalar):
+    """Multiply a vector with scalar"""
+    if not isinstance(scalar, tuple):
+        f1 = scalar
+        f2 = scalar
+    else:
+        f1, f2 = scalar
+    return pt[0]*f1, pt[1]*f2
 
 def divPt(pt, scalar):
     if not isinstance(scalar, tuple):
@@ -124,7 +142,7 @@ class FilterRedundantPointPen(AbstractPointPen):
                     # gather preceding off curves
                     testOffCurves = []
                     lastPoint = None
-                    for i in xrange(len(points)):
+                    for i in range(len(points)):
                         i = -i - 1
                         testPoint = points[i]
                         testSegmentType = testPoint[1]
@@ -303,21 +321,21 @@ class MathGlyph(object):
         # adapted from robofab.objects.objectsBase.RGlyph._anchorCompare
         selfAnchors = {}
         for pt, name in self.anchors:
-            if not selfAnchors.has_key(name):
+            if not name in selfAnchors:
                 selfAnchors[name] = []
             selfAnchors[name].append(pt)
         otherAnchors = {}
         for pt, name in other.anchors:
-            if not otherAnchors.has_key(name):
+            if not name in otherAnchors:
                 otherAnchors[name] = []
             otherAnchors[name].append(pt)
         compatAnchors = set(selfAnchors.keys()) & set(otherAnchors.keys())
         finalSelfAnchors = {}
         finalOtherAnchors = {}
         for name in compatAnchors:
-            if not finalSelfAnchors.has_key(name):
+            if not name in finalSelfAnchors:
                 finalSelfAnchors[name] = []
-            if not finalOtherAnchors.has_key(name):
+            if not name in finalOtherAnchors:
                 finalOtherAnchors[name] = []
             selfList = selfAnchors[name]
             otherList = otherAnchors[name]
@@ -337,21 +355,21 @@ class MathGlyph(object):
         #
         selfComponents = {}
         for baseName, transformation in self.components:
-            if not selfComponents.has_key(baseName):
+            if not baseName in selfComponents:
                 selfComponents[baseName] = []
             selfComponents[baseName].append(transformation)
         otherComponents = {}
         for baseName, transformation in other.components:
-            if not otherComponents.has_key(baseName):
+            if not baseName in otherComponents:
                 otherComponents[baseName] = []
             otherComponents[baseName].append(transformation)
         compatComponents = set(selfComponents.keys()) & set(otherComponents.keys())
         finalSelfComponents = {}
         finalOtherComponents = {}
         for baseName in compatComponents:
-            if not finalSelfComponents.has_key(baseName):
+            if not baseName in finalSelfComponents:
                 finalSelfComponents[baseName] = []
-            if not finalOtherComponents.has_key(baseName):
+            if not baseName in finalOtherComponents:
                 finalOtherComponents[baseName] = []
             selfList = selfComponents[baseName]
             otherList = otherComponents[baseName]
@@ -510,7 +528,6 @@ class MathGlyph(object):
 
     def draw(self, pen):
         """draw self using pen"""
-        from robofab.pens.adapterPens import PointToSegmentPen
         pointPen = PointToSegmentPen(pen)
         self.drawPoints(pointPen)
 

@@ -2,7 +2,7 @@
 from __future__ import division
 from math import atan2, tan, hypot, cos, degrees, radians
 
-from robofab.world import RGlyph
+from fontParts.fontshell import RGlyph
 
 import fontTools
 import fontTools.misc.bezierTools as bezierTools
@@ -10,10 +10,16 @@ import fontTools.misc.arrayTools as arrayTools
 import fontTools.misc.transform as transform
 from fontTools.pens.boundsPen import BoundsPen
 
-from mutatorScale.booleanOperations.booleanGlyph import BooleanGlyph
+try:
+    import mutatorScale
+except:
+    import os
+    import sys
+    libFolder = os.path.dirname(os.path.dirname(os.getcwd()))
+    if not libFolder in sys.path:
+        sys.path.append(libFolder)
+
 from mutatorScale.pens.utilityPens import CollectSegmentsPen
-
-
 
 def makeListFontName(font):
     """
@@ -53,7 +59,7 @@ def getRefStems(font, slantedSection=False):
             glyph = freezeGlyph(baseGlyph)
             width = glyph.width
 
-            glyph.skew(-angle)
+            glyph.skewBy((-angle, 0))
 
             xMin, yMin, xMax, yMax = getGlyphBox(glyph)
             xCenter = width / 2
@@ -155,7 +161,7 @@ def extractComposites(glyph):
     decomposedComposites = RGlyph()
 
     if len(glyph.components):
-        font = glyph.getParent()
+        font = glyph.font
 
         for comp in reversed(glyph.components):
 
@@ -181,7 +187,7 @@ def intersect(glyph, where, isHorizontal):
     Intersect a glyph with a horizontal or vertical line.
     Intersect each segment of a glyph using fontTools bezierTools.splitCubic and splitLine methods.
     """
-    pen = CollectSegmentsPen(glyph.getParent())
+    pen = CollectSegmentsPen(glyph.font)
     glyph.draw(pen)
     nakedGlyph = pen.getSegments()
     glyphIntersections = []
@@ -234,15 +240,15 @@ def findDuplicatePoints(segments):
     for seg in segments:
         for (x, y) in seg:
             p = round(x, 4), round(y, 4)
-            if counter.has_key(p):
+            if p in counter:
                 counter[p] += 1
-            elif not counter.has_key(p):
+            elif not p in counter:
                 counter[p] = 1
     return [key for key in counter if counter[key] > 1]
 
 
 def getGlyphBox(glyph):
-    pen = BoundsPen(glyph.getParent())
+    pen = BoundsPen(glyph.font)
     glyph.draw(pen)
     return pen.bounds
 

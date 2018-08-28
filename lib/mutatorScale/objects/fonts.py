@@ -1,6 +1,15 @@
 #coding=utf-8
 from __future__ import division
 
+try:
+    import mutatorScale
+except:
+    import os
+    import sys
+    libFolder = os.path.dirname(os.path.dirname(os.getcwd()))
+    if not libFolder in sys.path:
+        sys.path.append(libFolder)
+
 from mutatorScale.objects.mathGlyph import MathGlyph
 from mutatorScale.utilities.fontUtils import makeListFontName, getRefStems, getSlantAngle
 
@@ -252,9 +261,9 @@ if __name__ == '__main__':
                     self.assertIsInstance(scaledGlyph, Glyph)
                     self.assertEqual(scaledGlyph.name, glyphName)
 
-        def test_extract_scaled_glyph_as_Robofab_Glyph(self):
+        def test_extract_scaled_glyph_as_FontParts_Glyph(self):
             """Test scaled glyph retrieval as a Robofab Glyph."""
-            from robofab.world import RGlyph
+            from fontParts.fontshell import RGlyph
             for testFont in [self.smallFont, self.stemedSmallFont]:
                 scaledGlyph = RGlyph()
                 for glyphName in self.glyphNames:

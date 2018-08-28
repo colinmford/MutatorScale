@@ -1,6 +1,6 @@
 #coding=utf-8
 from fontTools.pens.basePen import BasePen
-from robofab.pens.pointPen import AbstractPointPen
+from ufoLib.pointPen import AbstractPointPen
 
 class ClockwiseTestPointPen(AbstractPointPen):
 

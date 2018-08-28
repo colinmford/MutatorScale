@@ -1,14 +1,25 @@
 #coding=utf-8
 from __future__ import division
 
-from robofab.world import RGlyph
+from fontParts.fontshell import RGlyph
+
 from mutatorMath.objects.location import Location
 from mutatorMath.objects.mutator import buildMutator
+
+try:
+    import mutatorScale
+except:
+    import os
+    import sys
+    libFolder = os.path.dirname(os.path.dirname(os.getcwd()))
+    if not libFolder in sys.path:
+        sys.path.append(libFolder)
 
 from mutatorScale.objects.fonts import MutatorScaleFont
 from mutatorScale.objects.errorGlyph import ErrorGlyph
 from mutatorScale.utilities.fontUtils import makeListFontName, joinFontName
 from mutatorScale.utilities.numbersUtils import mapValue
+
 
 class MutatorScaleEngine:
     """
@@ -118,16 +129,16 @@ class MutatorScaleEngine:
         scale = (1, 1)
         width = 1
 
-        if scalingParameters.has_key('width'):
+        if 'width' in scalingParameters:
             width = scalingParameters['width']
             scale = (width, 1)
 
-        if scalingParameters.has_key('scale'):
+        if 'scale' in scalingParameters:
             scale = scalingParameters['scale']
             if isinstance(scale, (float, int)):
                 scale = (scale, scale)
 
-        elif  scalingParameters.has_key('targetHeight') and scalingParameters.has_key('referenceHeight'):
+        elif 'targetHeight' in scalingParameters and 'referenceHeight' in scalingParameters:
             targetHeight = scalingParameters['targetHeight']
             referenceHeight = scalingParameters['referenceHeight']
             scale = (width, targetHeight, referenceHeight)
@@ -178,7 +189,7 @@ class MutatorScaleEngine:
     def removeMaster(self, font):
         """Remove a MutatorScaleFont from masters."""
         name = makeListFontName(font)
-        if self.masters.has_key(name):
+        if name in self.masters:
             self.masters.pop(name, 0)
         self.update()
 
@@ -287,7 +298,7 @@ class MutatorScaleEngine:
             self.mutatorErrors.append({'error':e.message})
             return None
 
-    def _getTargetLocation(self, stemTarget, masters, workingStems, (xScale, yScale)):
+    def _getTargetLocation(self, stemTarget, masters, workingStems, scale):
         """
         Return a proper Location object for a scaled glyph instance,
         the essential part lies in the conversion of stem values.
@@ -295,6 +306,7 @@ class MutatorScaleEngine:
         a glyph with proper stem widths without requiring two-axes interpolation.
         """
 
+        xScale, yScale = scale
         targetVstem, targetHstem = None, None
 
         try: targetVstem, targetHstem = stemTarget
@@ -422,6 +434,7 @@ if __name__ == '__main__':
     import unittest
     import glob
     from defcon import Font
+    from functools import reduce
 
     class MutatorScaleEngineTest(unittest.TestCase):
 
