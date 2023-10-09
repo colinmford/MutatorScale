@@ -197,7 +197,7 @@ class MutatorScaleEngine:
 
     def getScaledGlyph(self, glyphName, stemTarget, slantCorrection=True, attributes=None):
         """Return an interpolated & scaled glyph according to set parameters and given masters."""
-        masters = self.masters.values()
+        masters = list(self.masters.values())
         workingStems = self._workingStems
         mutatorMasters = []
         yScales = []
@@ -297,7 +297,7 @@ class MutatorScaleEngine:
                 instance = m.makeInstance(location)
                 return instance
         except Exception as e:
-            self.mutatorErrors.append({'error':e.message})
+            self.mutatorErrors.append({'error':e})
             return None
 
     def _getTargetLocation(self, stemTarget, masters, workingStems, scale):
