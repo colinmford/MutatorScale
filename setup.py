@@ -11,7 +11,7 @@ setup(name = "MutatorScale",
       license = "MIT",
       packages = [
               "mutatorScale",
-              "mutatorScale.booleanOperations",
+            #   "mutatorScale.booleanOperations",
               "mutatorScale.objects",
               "mutatorScale.pens",
               "mutatorScale.utilities",
